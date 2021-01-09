@@ -1,52 +1,45 @@
 server {
-        listen 80;
-        listen [::]:80;
+	listen 80;
+	listen [::]:80;
+	server_name localhost;
 	
-        server_name localhost;
-        
 	root /var/www/html;
-        index index.php index.nginx-debian.html index.html index.htm;
+	index index.php index.nginx-debian.html index.html index.htm;
 
-        location / {
-                try_files $uri $uri/ /index.php?$args;
-        }
-
-        error_page 404 /404.html;
-        error_page 500 502 503 504 /50x.html;
-
-        location = /50x.html {
-                root /var/www/html;
-        }
+	location / {
+		try_files $uri $uri/ /index.php?$args;
+	}
 
 # pass the PHP scripts to FastCGI server listening on the php-fpm$
-        location ~ \.php$ {
-                try_files $uri = 400;
-                fastcgi_pass unix:/run/php/php7.3-fpm.sock;
-                fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-                include fastcgi_params;
-        }
 
-        location = /favicon.ico { access_log off; log_not_found off;  }
+	location ~ \.php$ {
+		try_files $uri = 400;
+		fastcgi_pass unix:/run/php/php7.3-fpm.sock;
+		fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+		include fastcgi_params;
+	}
 
-        location /phpmyadmin {
-                root /var/www/html;
-                index index.php index.html index.htm;
+	location = /favicon.ico { access_log off; log_not_found off;}
 
-                location ~ ^/phpmyadmin/(.+\.php)$ {
-		        try_files $uri = 404;
-		        root /var/www/html;
-		        fastcgi_pass unix:/run/php/php7.3-fpm.sock;
-		        fastcgi_index index.php;
-		        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-		        include fastcgi_params;
-                }
+	location /phpmyadmin {
+		root /var/www/html;
+		index index.php index.html index.htm;
 
-                location ~*^/phpmyadmin/(.+\.(jpg|jpeg|gif|css|png|js|ico|html|xml|txt))$ {
+		location ~^/phpmyadmin/(.+\.php)$ {
+			try_files $uri = 404;
 			root /var/www/html;
-                }
-        }
+			fastcgi_pass unix:/run/php/php7.3-fpm.sock;
+			fastcgi_index index.php;
+			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+			include fastcgi_params;
+		}
 
-        location /phpMyAdmin {
-                rewrite ^/* /phpmyadmin last;
-        }
+		location ~*^/phpmyadmin/(.+\.(jpg|jpeg|gif|css|png|js|ico|html|xml|txt))$ {
+			root /var/www/html;
+		}
+	}
+
+	location /phpMyAdmin {
+		rewrite ^/* /phpmyadmin last;
+	}
 }
