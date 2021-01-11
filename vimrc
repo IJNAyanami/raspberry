@@ -1,3 +1,5 @@
+colorscheme vividchalk
+
 syntax enable
 set number
 set cursorline
@@ -34,3 +36,10 @@ set list
 set wildmenu
 set wildmode=longest:list,full
 set listchars=tab:»·,trail:·
+
+inoremap ( ()<LEFT>
+inoremap { {}<LEFT>
+inoremap [ []<LEFT>
+inoremap ' ''<LEFT>
+inoremap " ""<LEFT>
+inoremap < <><LEFT>
